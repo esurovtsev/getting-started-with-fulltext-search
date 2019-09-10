@@ -1,0 +1,3 @@
+logging.level.root: warn
+com.grabduck.searchengine:
+  dataDir: target/classes/stories
