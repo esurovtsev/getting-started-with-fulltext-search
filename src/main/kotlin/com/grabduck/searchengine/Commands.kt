@@ -4,10 +4,10 @@ import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
 
 @ShellComponent
-class Commands(private val documentService: DocumentService) {
+class Commands(private val config: Configuration, private val documentService: DocumentService) {
     @ShellMethod("Show current configuration")
     fun config(): List<String> =
-            listOf("dataDir: ${documentService.getDataDir()}")
+            config.getAllProperties().entries.map { "${it.key}: ${it.value}" }
 
     @ShellMethod("List all available document ids")
     fun findAllIds(): List<String> =
