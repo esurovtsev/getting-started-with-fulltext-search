@@ -5,6 +5,10 @@ import org.springframework.shell.standard.ShellMethod
 
 @ShellComponent
 class Commands(private val documentService: DocumentService) {
+    @ShellMethod("Show current configuration")
+    fun config(): List<String> =
+            listOf("dataDir: ${documentService.getDataDir()}")
+
     @ShellMethod("List all available document ids")
     fun findAllIds(): List<String> =
             documentService.findAllIds()
