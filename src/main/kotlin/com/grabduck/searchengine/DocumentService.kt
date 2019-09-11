@@ -8,10 +8,14 @@ interface DocumentService {
     fun findAllIds(): List<String>
 
     fun findById(documentId: String): String?
+    fun getDataDir(): String
 }
 
 @Service
 class DocumentServiceImpl : DocumentService {
+    override fun getDataDir(): String =
+            File(dataDir).absolutePath
+
     @Value("\${com.grabduck.searchengine.dataDir}")
     private lateinit var dataDir: String
 
