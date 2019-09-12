@@ -36,6 +36,12 @@ class Commands(
         return "direct index created"
     }
 
+    @ShellMethod("Generates better direct Index")
+    fun createBetterDirectIndex(): String {
+        directIndexer.createBetterIndex()
+        return "better direct index created"
+    }
+
     @ShellMethod("Show direct index content by document ID")
     fun findDirectIndexById(documentId: String): List<String> =
             directIndexer.findById(documentId)
@@ -44,4 +50,8 @@ class Commands(
     @ShellMethod("Performs a search on Direct Index")
     fun findUsingDirectIndex(request: String): List<String> =
             searchService.findUsingDirectIndex(request)
+
+    @ShellMethod("Performs a search on Direct Index with better analyzing")
+    fun findUsingBetterDirectIndex(request: String): List<String> =
+            searchService.findUsingBetterDirectIndex(request)
 }
