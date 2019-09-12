@@ -29,4 +29,11 @@ class SearchService(
             .findAllIds()
             .filter { docId -> directIndexer.findById(docId)?.let { docTokens -> docTokens.containsAll(terms) } }
     }
+
+    fun findUsingBetterDirectIndex(request: String): List<String> {
+        val terms = analyzer.analyze(request)
+        return documentService
+            .findAllIds()
+            .filter { docId -> directIndexer.findById(docId)?.let { docTokens -> docTokens.containsAll(terms) } }
+    }
 }
