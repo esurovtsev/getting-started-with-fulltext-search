@@ -7,7 +7,8 @@ import org.springframework.shell.standard.ShellMethod
 class Commands(
         private val config: Configuration,
         private val documentService: DocumentService,
-        private val searchService: SearchService
+        private val searchService: SearchService,
+        private val directIndexer: DirectIndexer
 ) {
     @ShellMethod("Show current configuration")
     fun config(): List<String> =
@@ -28,4 +29,19 @@ class Commands(
     @ShellMethod("Performs a brute force search across all documents using tokenization for search request")
     fun findUsingBruteForceTokenize(request: String): List<String> =
             searchService.findUsingBruteForce_tokenize(request)
+
+    @ShellMethod("Generates direct Index")
+    fun createDirectIndex(): String {
+        directIndexer.createIndex()
+        return "direct index created"
+    }
+
+    @ShellMethod("Show direct index content by document ID")
+    fun findDirectIndexById(documentId: String): List<String> =
+            directIndexer.findById(documentId)
+
+
+    @ShellMethod("Performs a search on Direct Index")
+    fun findUsingDirectIndex(request: String): List<String> =
+            searchService.findUsingDirectIndex(request)
 }
