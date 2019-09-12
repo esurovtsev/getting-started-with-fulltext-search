@@ -8,7 +8,12 @@ class TokenAnalyzer {
             WhitespaceTokenizer.tokenize(input)
 
     fun analyze(input: String): List<String> =
-            BetterTokenizer.tokenize(input)
+            BetterTokenizer
+                .tokenize(input)
+                .flatMap { LowerCaseFilter.filter(it) }
+                .toSortedSet()
+                .toList()
+
 }
 
 object WhitespaceTokenizer {
@@ -25,4 +30,9 @@ object BetterTokenizer {
             WhitespaceTokenizer
                 .tokenize(nonAlpha.replace(input, " "))
                 .filter { it.length > 1 }
+}
+
+object LowerCaseFilter {
+    fun filter(input: String): List<String> =
+            listOf(input.toLowerCase())
 }
