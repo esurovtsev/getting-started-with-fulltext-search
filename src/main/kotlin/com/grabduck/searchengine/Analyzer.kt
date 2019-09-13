@@ -10,7 +10,8 @@ class TokenAnalyzer(
         private val betterTokenizer: BetterTokenizer,
         private val lowerCaseFilter: LowerCaseFilter,
         private val stopwordsFilter: StopwordsFilter,
-        private val stemmingFilter: StemmingFilter
+        private val stemmingFilter: StemmingFilter,
+        private val synonymsFilter: SynonymsFilter
 ) {
     fun tokenize(input: String): List<String> =
             whitespaceTokenizer.tokenize(input)
@@ -21,6 +22,7 @@ class TokenAnalyzer(
                 .flatMap { lowerCaseFilter.filter(it) }
                 .flatMap { stopwordsFilter.filter(it) }
                 .flatMap { stemmingFilter.filter(it) }
+                .flatMap { synonymsFilter.filter(it) }
                 .toSortedSet()
                 .toList()
 
@@ -92,4 +94,14 @@ class StemmingFilter : Filter {
                 .mapNotNull { it.stemming(input) }
                 .fold(input) { result, element -> if (result.length < element.length) result else element })
 
+}
+
+@Component
+class SynonymsFilter : Filter {
+    val synonyms = mapOf(
+            "mountain" to listOf("hill", "bluff", "cliff", "elevation", "peak", "pile", "ridge", "sierra", "volcano")
+    )
+
+    override fun filter(input: String): List<String> =
+            synonyms[input]?.plus(input) ?: listOf(input)
 }
