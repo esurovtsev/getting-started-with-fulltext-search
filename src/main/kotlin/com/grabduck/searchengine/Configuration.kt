@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct
 
 const val DATA_DIR_KEY = "com.grabduck.searchengine.dataDir"
 const val DIRECT_INDEX_DIR_KEY = "com.grabduck.searchengine.directIndexDir"
+const val STOP_WORDS_FILE_KEY = "com.grabduck.searchengine.stopWords"
 
 @Component
 class Configuration {
@@ -15,6 +16,9 @@ class Configuration {
 
     @Value("\${$DIRECT_INDEX_DIR_KEY}")
     private lateinit var directIndexDir: String
+
+    @Value("\${$STOP_WORDS_FILE_KEY}")
+    private lateinit var stopwordsFile: String
 
     @PostConstruct
     fun init() {
@@ -30,13 +34,17 @@ class Configuration {
     fun getAllProperties(): Map<String, String> =
             mapOf(
                     DATA_DIR_KEY to File(dataDir).absolutePath,
-                    DIRECT_INDEX_DIR_KEY to File(directIndexDir).absolutePath
+                    DIRECT_INDEX_DIR_KEY to File(directIndexDir).absolutePath,
+                    STOP_WORDS_FILE_KEY to File(stopwordsFile).absolutePath
             )
 
     fun getDataDir(): String =
-            getAllProperties()[DATA_DIR_KEY] ?: ""
+            getAllProperties()[DATA_DIR_KEY] ?: ".."
 
     fun getDirectIndexDir(): String =
-            getAllProperties()[DIRECT_INDEX_DIR_KEY] ?: ""
+            getAllProperties()[DIRECT_INDEX_DIR_KEY] ?: ".."
+
+    fun getStopWordsFile(): String =
+            getAllProperties()[STOP_WORDS_FILE_KEY] ?: "stopwords.txt"
 
 }
