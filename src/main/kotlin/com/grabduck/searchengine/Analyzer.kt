@@ -26,6 +26,14 @@ class TokenAnalyzer(
                 .toSortedSet()
                 .toList()
 
+    fun index(input: String): List<String> =
+            betterTokenizer
+                .tokenize(input)
+                .flatMap { lowerCaseFilter.filter(it) }
+                .flatMap { stopwordsFilter.filter(it) }
+                .flatMap { stemmingFilter.filter(it) }
+                .flatMap { synonymsFilter.filter(it) }
+                .toList()
 }
 
 @Component
