@@ -8,7 +8,8 @@ class Commands(
         private val config: Configuration,
         private val documentService: DocumentService,
         private val searchService: SearchService,
-        private val directIndexer: DirectIndexer
+        private val directIndexer: DirectIndexer,
+        private val invertedIndexer: InvertedIndexer
 ) {
     @ShellMethod("Show current configuration")
     fun config(): List<String> =
@@ -42,6 +43,12 @@ class Commands(
         return "better direct index created"
     }
 
+    @ShellMethod("Generates Inverted Index")
+    fun createInvertedIndex(): String {
+        invertedIndexer.createIndex()
+        return "inverted index created"
+    }
+
     @ShellMethod("Show direct index content by document ID")
     fun findDirectIndexById(documentId: String): List<String> =
             directIndexer.findById(documentId)
@@ -54,4 +61,8 @@ class Commands(
     @ShellMethod("Performs a search on Direct Index with better analyzing")
     fun findUsingBetterDirectIndex(request: String): List<String> =
             searchService.findUsingBetterDirectIndex(request)
+
+    @ShellMethod("Performs a search on Inverted Index")
+    fun findUsingInvertedIndex(request: String): List<String> =
+            searchService.findUsingInvertedIndex(request)
 }
