@@ -1,5 +1,6 @@
 logging.level.root: warn
 com.grabduck.searchengine:
   dataDir: target/classes/stories
-  directIndexDir: target/classes/index/direct
+  directIndexDir: target/classes/direct-index
+  invertedIndexFile: target/classes/inverted-index.txt
   stopWords: target/classes/stopwords.txt
