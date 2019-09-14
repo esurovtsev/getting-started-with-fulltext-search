@@ -9,7 +9,8 @@ fun String.containsAllTerms(terms: List<String>): Boolean =
 class SearchService(
         private val documentService: DocumentService,
         private val directIndexer: DirectIndexer,
-        private val analyzer: TokenAnalyzer
+        private val analyzer: TokenAnalyzer,
+        private val invertedIndexer: InvertedIndexer
 ) {
     fun findUsingBruteForce_simple(request: String): List<String> =
             documentService
@@ -36,4 +37,11 @@ class SearchService(
             .findAllIds()
             .filter { docId -> directIndexer.findById(docId)?.let { docTokens -> docTokens.containsAll(terms) } }
     }
+
+    fun findUsingInvertedIndex(request: String): List<String> =
+            analyzer
+                .analyze(request)
+                .map { invertedIndexer.getDocumentIdsByToken(it).toSet() }
+                .reduce { a, b -> a.intersect(b) }
+                .toList()
 }
