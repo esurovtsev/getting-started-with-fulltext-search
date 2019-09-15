@@ -41,7 +41,7 @@ class SearchService(
     fun findUsingInvertedIndex(request: String): List<String> =
             analyzer
                 .analyze(request)
-                .map { invertedIndexer.getDocumentIdsByToken(it).toSet() }
+                .map { invertedIndexer.getPostingListByToken(it).toSet() }
                 .reduce { a, b -> a.intersect(b) }
                 .toList()
 }
