@@ -94,7 +94,8 @@ class StemmingFilter : Filter {
             SuffixRule("ability"),
             SuffixRule("ness"),
             SuffixRule("er"),
-            SuffixRule("e")
+            SuffixRule("e"),
+            SuffixRule("es")
     )
 
     override fun filter(input: String): List<String> =
