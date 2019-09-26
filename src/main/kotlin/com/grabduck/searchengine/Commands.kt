@@ -24,11 +24,11 @@ class Commands(
             documentService.findById(documentId) ?: "document not found"
 
     @ShellMethod("Performs a brute force search across all documents using simple comparison")
-    fun findUsingBruteForceSimple(request: String): List<String> =
+    fun findUsingBruteForceSimple(request: String): Collection<String> =
             searchService.findUsingBruteForce_simple(request)
 
     @ShellMethod("Performs a brute force search across all documents using tokenization for search request")
-    fun findUsingBruteForceTokenize(request: String): List<String> =
+    fun findUsingBruteForceTokenize(request: String): Collection<String> =
             searchService.findUsingBruteForce_tokenize(request)
 
     @ShellMethod("Generates direct Index")
@@ -50,19 +50,19 @@ class Commands(
     }
 
     @ShellMethod("Show direct index content by document ID")
-    fun findDirectIndexById(documentId: String): List<String> =
+    fun findDirectIndexById(documentId: String): Collection<String> =
             directIndexer.findById(documentId)
 
 
     @ShellMethod("Performs a search on Direct Index")
-    fun findUsingDirectIndex(request: String): List<String> =
+    fun findUsingDirectIndex(request: String): Collection<String> =
             searchService.findUsingDirectIndex(request)
 
     @ShellMethod("Performs a search on Direct Index with better analyzing")
-    fun findUsingBetterDirectIndex(request: String): List<String> =
+    fun findUsingBetterDirectIndex(request: String): Collection<String> =
             searchService.findUsingBetterDirectIndex(request)
 
     @ShellMethod("Performs a search on Inverted Index")
-    fun findUsingInvertedIndex(request: String): List<String> =
+    fun findUsingInvertedIndex(request: String): Collection<String> =
             searchService.findUsingInvertedIndex(request)
 }

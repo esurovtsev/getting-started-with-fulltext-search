@@ -21,7 +21,7 @@ class SearchService(
         val terms = analyzer.tokenize(request)
         return documentService
             .findAllIds()
-            .filter { docId -> documentService.findById(docId)?.let { it.containsAllTerms(terms) } ?: false }
+            .filter { docId -> documentService.findById(docId)?.let { it.containsAllTerms(terms.toList()) } ?: false }
     }
 
     fun findUsingDirectIndex(request: String): List<String> {
@@ -38,7 +38,7 @@ class SearchService(
             .filter { docId -> directIndexer.findById(docId)?.let { docTokens -> docTokens.containsAll(terms) } }
     }
 
-    fun findUsingInvertedIndex(request: String): List<String> =
+    fun findUsingInvertedIndex(request: String): Collection<String> =
             analyzer
                 .analyze(request)
                 .map { invertedIndexer.getPostingListByToken(it).toSet() }

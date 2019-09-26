@@ -13,10 +13,10 @@ class TokenAnalyzer(
         private val stemmingFilter: StemmingFilter,
         private val synonymsFilter: SynonymsFilter
 ) {
-    fun tokenize(input: String): List<String> =
+    fun tokenize(input: String): Collection<String> =
             whitespaceTokenizer.tokenize(input)
 
-    fun analyze(input: String): List<String> =
+    fun analyze(input: String): Collection<String> =
             betterTokenizer
                 .tokenize(input)
                 .flatMap { lowerCaseFilter.filter(it) }
@@ -24,9 +24,8 @@ class TokenAnalyzer(
                 .flatMap { stemmingFilter.filter(it) }
                 .flatMap { synonymsFilter.filter(it) }
                 .toSortedSet()
-                .toList()
 
-    fun index(input: String): List<String> =
+    fun index(input: String): Collection<String> =
             betterTokenizer
                 .tokenize(input)
                 .flatMap { lowerCaseFilter.filter(it) }
@@ -40,22 +39,22 @@ class TokenAnalyzer(
 class WhitespaceTokenizer {
     private val whitespace = Regex("\\s+")
 
-    fun tokenize(input: String): List<String> =
-            input.split(whitespace).toSet().toList()
+    fun tokenize(input: String): Collection<String> =
+            input.split(whitespace).toSet()
 }
 
 @Component
 class BetterTokenizer(private val whitespaceTokenizer: WhitespaceTokenizer) {
     private val nonAlpha = Regex("[^a-zA-Z]")
 
-    fun tokenize(input: String): List<String> =
+    fun tokenize(input: String): Collection<String> =
             whitespaceTokenizer
                 .tokenize(nonAlpha.replace(input, " "))
                 .filter { it.length > 1 }
 }
 
 interface Filter {
-    fun filter(input: String): List<String>
+    fun filter(input: String): Collection<String>
 }
 
 @Component
@@ -73,7 +72,7 @@ class StopwordsFilter(val config: Configuration) : Filter {
         stopWords = File(config.getStopWordsFile()).readLines().toSet()
     }
 
-    override fun filter(input: String): List<String> =
+    override fun filter(input: String): Collection<String> =
             if (stopWords.contains(input)) listOf() else listOf(input)
 }
 
@@ -98,7 +97,7 @@ class StemmingFilter : Filter {
             SuffixRule("es")
     )
 
-    override fun filter(input: String): List<String> =
+    override fun filter(input: String): Collection<String> =
             listOf(rules
                 .mapNotNull { it.stemming(input) }
                 .fold(input) { result, element -> if (result.length < element.length) result else element })
@@ -111,6 +110,6 @@ class SynonymsFilter : Filter {
             "mountain" to listOf("hill", "bluff", "cliff", "elevation", "peak", "pile", "ridge", "sierra", "volcano")
     )
 
-    override fun filter(input: String): List<String> =
+    override fun filter(input: String): Collection<String> =
             synonyms[input]?.plus(input) ?: listOf(input)
 }
