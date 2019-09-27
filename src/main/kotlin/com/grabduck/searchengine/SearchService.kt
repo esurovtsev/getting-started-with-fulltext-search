@@ -3,7 +3,7 @@ package com.grabduck.searchengine
 import org.springframework.stereotype.Service
 
 fun String.containsAllTerms(terms: Collection<String>): Boolean =
-        terms.map { contains(it) }.fold(false) { result, element -> result || element }
+        terms.map { contains(it) }.fold(true) { result, element -> result && element }
 
 @Service
 class SearchService(
