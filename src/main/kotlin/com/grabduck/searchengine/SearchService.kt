@@ -2,7 +2,7 @@ package com.grabduck.searchengine
 
 import org.springframework.stereotype.Service
 
-fun String.containsAtLeastOneTerm(terms: Collection<String>): Boolean =
+fun String.containsAllTerms(terms: Collection<String>): Boolean =
         terms.map { contains(it) }.fold(false) { result, element -> result || element }
 
 @Service
@@ -21,7 +21,7 @@ class SearchService(
         val terms = analyzer.tokenize(request)
         return documentService
             .findAllIds()
-            .filter { docId -> documentService.findById(docId)?.let { it.containsAtLeastOneTerm(terms) } ?: false }
+            .filter { docId -> documentService.findById(docId)?.let { it.containsAllTerms(terms) } ?: false }
     }
 
     fun findUsingDirectIndex(request: String): List<String> {
