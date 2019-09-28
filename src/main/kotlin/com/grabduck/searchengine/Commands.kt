@@ -46,9 +46,6 @@ class Commands(
                 SearchType.DIRECT_INDEX -> addHeader(searchService.findUsingDirectIndex(query))
                 SearchType.BETTER_DIRECT_INDEX -> addHeader(searchService.findUsingBetterDirectIndex(query))
                 SearchType.INVERTED_INDEX -> addHeader(searchService.findUsingInvertedIndex(query))
-                else -> {
-                    throw RuntimeException("type was not recognized")
-                }
             }
 
     @ShellMethod("Generates a search Index")
@@ -59,9 +56,6 @@ class Commands(
             IndexType.DIRECT -> directIndexer.createIndex()
             IndexType.BETTER_DIRECT -> directIndexer.createBetterIndex()
             IndexType.INVERTED -> invertedIndexer.createIndex()
-            else -> {
-                throw RuntimeException("type was not recognized")
-            }
         }
         return "Index created: $type"
     }
