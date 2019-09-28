@@ -1,4 +1,4 @@
-package com.grabduck.searchengine
+package com.searchingbits.getstartedfulltextsearch
 
 import com.google.gson.GsonBuilder
 import org.springframework.stereotype.Component

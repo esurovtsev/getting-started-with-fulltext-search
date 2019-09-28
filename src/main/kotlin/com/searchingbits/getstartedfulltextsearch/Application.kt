@@ -1,4 +1,4 @@
-package com.grabduck.searchengine
+package com.searchingbits.getstartedfulltextsearch
 
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication

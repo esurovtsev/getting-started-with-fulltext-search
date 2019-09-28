@@ -1,4 +1,4 @@
-package com.grabduck.searchengine
+package com.searchingbits.getstartedfulltextsearch
 
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod

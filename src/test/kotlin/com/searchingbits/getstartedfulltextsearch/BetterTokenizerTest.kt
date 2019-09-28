@@ -1,4 +1,4 @@
-package com.grabduck.searchengine
+package com.searchingbits.getstartedfulltextsearch
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
