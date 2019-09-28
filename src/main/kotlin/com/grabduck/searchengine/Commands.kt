@@ -8,6 +8,10 @@ enum class SearchType {
     BRUTE_FORCE, BRUTE_FORCE_TOKEN, DIRECT_INDEX, BETTER_DIRECT_INDEX, INVERTED_INDEX
 }
 
+enum class IndexType {
+    DIRECT, BETTER_DIRECT, INVERTED
+}
+
 @ShellComponent
 class Commands(
         private val config: Configuration,
@@ -47,27 +51,20 @@ class Commands(
                 }
             }
 
-    @ShellMethod("Generates direct Index")
-    fun createDirectIndex(): String {
-        directIndexer.createIndex()
-        return "direct index created"
+    @ShellMethod("Generates a search Index")
+    fun createIndex(
+        @ShellOption(help = "Defines an index type") type: IndexType
+    ): String {
+        when (type) {
+            IndexType.DIRECT -> directIndexer.createIndex()
+            IndexType.BETTER_DIRECT -> directIndexer.createBetterIndex()
+            IndexType.INVERTED -> invertedIndexer.createIndex()
+            else -> {
+                throw RuntimeException("type was not recognized")
+            }
+        }
+        return "Index created: $type"
     }
-
-    @ShellMethod("Generates better direct Index")
-    fun createBetterDirectIndex(): String {
-        directIndexer.createBetterIndex()
-        return "better direct index created"
-    }
-
-    @ShellMethod("Generates Inverted Index")
-    fun createInvertedIndex(): String {
-        invertedIndexer.createIndex()
-        return "inverted index created"
-    }
-
-    @ShellMethod("Show direct index content by document ID")
-    fun findDirectIndexById(documentId: String): Collection<String> =
-            directIndexer.findById(documentId)
 
     private fun addHeader(result: Collection<String>): List<String> =
             listOf("Results found: ${result.size}")
