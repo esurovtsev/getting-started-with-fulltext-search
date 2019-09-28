@@ -2,6 +2,11 @@ package com.grabduck.searchengine
 
 import org.springframework.shell.standard.ShellComponent
 import org.springframework.shell.standard.ShellMethod
+import org.springframework.shell.standard.ShellOption
+
+enum class SearchType {
+    BRUTE_FORCE, BRUTE_FORCE_TOKEN, DIRECT_INDEX, BETTER_DIRECT_INDEX, INVERTED_INDEX
+}
 
 @ShellComponent
 class Commands(
@@ -15,21 +20,32 @@ class Commands(
     fun config(): List<String> =
             config.getAllProperties().entries.map { "${it.key}: ${it.value}" }
 
-    @ShellMethod("List all available document ids")
-    fun findAllIds(): List<String> =
-            documentService.findAllIds()
+    @ShellMethod("Lists documents or document content")
+    fun document(
+            @ShellOption(help = "Document ID or 'all' for getting list of all documents")
+            id: String
+    ): List<String> =
+            if (id == "all") {
+                documentService.findAllIds()
+            } else {
+                listOf(documentService.findById(id) ?: "document not found")
+            }
 
-    @ShellMethod("Show document content by document ID")
-    fun findById(documentId: String): String =
-            documentService.findById(documentId) ?: "document not found"
-
-    @ShellMethod("Performs a brute force search across all documents using simple comparison")
-    fun findUsingBruteForceSimple(request: String): Collection<String> =
-            searchService.findUsingBruteForce_simple(request)
-
-    @ShellMethod("Performs a brute force search across all documents using tokenization for search request")
-    fun findUsingBruteForceTokenize(request: String): Collection<String> =
-            searchService.findUsingBruteForce_tokenize(request)
+    @ShellMethod("Performs a search request on the documents")
+    fun search(
+            @ShellOption(help = "Defines a search type") type: SearchType,
+            @ShellOption(help = "Defines a search query") query: String
+    ): List<String> =
+            when (type) {
+                SearchType.BRUTE_FORCE -> addHeader(searchService.findUsingBruteForce_simple(query))
+                SearchType.BRUTE_FORCE_TOKEN -> addHeader(searchService.findUsingBruteForce_tokenize(query))
+                SearchType.DIRECT_INDEX -> addHeader(searchService.findUsingDirectIndex(query))
+                SearchType.BETTER_DIRECT_INDEX -> addHeader(searchService.findUsingBetterDirectIndex(query))
+                SearchType.INVERTED_INDEX -> addHeader(searchService.findUsingInvertedIndex(query))
+                else -> {
+                    throw RuntimeException("type was not recognized")
+                }
+            }
 
     @ShellMethod("Generates direct Index")
     fun createDirectIndex(): String {
@@ -53,16 +69,9 @@ class Commands(
     fun findDirectIndexById(documentId: String): Collection<String> =
             directIndexer.findById(documentId)
 
-
-    @ShellMethod("Performs a search on Direct Index")
-    fun findUsingDirectIndex(request: String): Collection<String> =
-            searchService.findUsingDirectIndex(request)
-
-    @ShellMethod("Performs a search on Direct Index with better analyzing")
-    fun findUsingBetterDirectIndex(request: String): Collection<String> =
-            searchService.findUsingBetterDirectIndex(request)
-
-    @ShellMethod("Performs a search on Inverted Index")
-    fun findUsingInvertedIndex(request: String): Collection<String> =
-            searchService.findUsingInvertedIndex(request)
+    private fun addHeader(result: Collection<String>): List<String> =
+            listOf("Results found: ${result.size}")
+                .plus("---------------------------------------")
+                .plus(result)
+                .plus("---------------------------------------")
 }
