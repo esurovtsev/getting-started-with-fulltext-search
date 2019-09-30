@@ -33,7 +33,7 @@ class InvertedIndexer(
         documentService.findAllIds().forEach { docId ->
             documentService.findById(docId)?.let { doc ->
                 analyzer
-                    .index(doc)
+                    .analyze_betterTokenizing(doc)
                     .groupBy { it }
                     .entries
                     .map { it.key to docId }

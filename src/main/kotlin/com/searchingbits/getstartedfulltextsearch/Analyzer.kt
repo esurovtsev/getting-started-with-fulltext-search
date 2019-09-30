@@ -13,10 +13,10 @@ class TokenAnalyzer(
         private val stemmingFilter: StemmingFilter,
         private val synonymsFilter: SynonymsFilter
 ) {
-    fun tokenize(input: String): Collection<String> =
+    fun analyze_whitespaceTokenizing(input: String): Collection<String> =
             whitespaceTokenizer.tokenize(input)
 
-    fun analyze(input: String): Collection<String> =
+    fun analyze_betterTokenizing(input: String): Collection<String> =
             betterTokenizer
                 .tokenize(input)
                 .flatMap { lowerCaseFilter.filter(it) }
@@ -24,15 +24,6 @@ class TokenAnalyzer(
                 .flatMap { stemmingFilter.filter(it) }
                 .flatMap { synonymsFilter.filter(it) }
                 .toSortedSet()
-
-    fun index(input: String): Collection<String> =
-            betterTokenizer
-                .tokenize(input)
-                .flatMap { lowerCaseFilter.filter(it) }
-                .flatMap { stopwordsFilter.filter(it) }
-                .flatMap { stemmingFilter.filter(it) }
-                .flatMap { synonymsFilter.filter(it) }
-                .toList()
 }
 
 @Component

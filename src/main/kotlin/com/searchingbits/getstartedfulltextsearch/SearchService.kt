@@ -18,21 +18,21 @@ class SearchService(
                 .filter { docId -> documentService.findById(docId)?.let { docContent -> docContent.contains(request) } ?: false }
 
     fun findUsingBruteForce_tokenize(request: String): List<String> {
-        val terms = analyzer.tokenize(request)
+        val terms = analyzer.analyze_whitespaceTokenizing(request)
         return documentService
             .findAllIds()
             .filter { docId -> documentService.findById(docId)?.let { it.containsAllTerms(terms) } ?: false }
     }
 
     fun findUsingDirectIndex(request: String): List<String> {
-        val terms = analyzer.tokenize(request)
+        val terms = analyzer.analyze_whitespaceTokenizing(request)
         return documentService
             .findAllIds()
             .filter { docId -> directIndexer.findById(docId)?.let { docTokens -> docTokens.containsAll(terms) } }
     }
 
     fun findUsingBetterDirectIndex(request: String): List<String> {
-        val terms = analyzer.analyze(request)
+        val terms = analyzer.analyze_betterTokenizing(request)
         return documentService
             .findAllIds()
             .filter { docId -> directIndexer.findById(docId)?.let { docTokens -> docTokens.containsAll(terms) } }
@@ -40,13 +40,13 @@ class SearchService(
 
     fun findUsingInvertedIndex(request: String): Collection<String> =
             analyzer
-                .analyze(request)
+                .analyze_betterTokenizing(request)
                 .map { invertedIndexer.getPostingListByToken(it).toSet() }
                 .reduce { a, b -> a.intersect(b) }
 
     fun findUsingGreedyInvertedIndex(request: String): Collection<String> =
             analyzer
-                .analyze(request)
+                .analyze_betterTokenizing(request)
                 .map { invertedIndexer.getPostingListByToken(it).toSet() }
                 .reduce { a, b -> a.plus(b) }
 }

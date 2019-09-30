@@ -16,7 +16,7 @@ class DirectIndexer(
         // generate new index
         documentService.findAllIds().forEach { docId ->
             documentService.findById(docId)?.let {
-                File("${config.getDirectIndexDir()}/$docId").writeText(analyzer.tokenize(it).joinToString("\n"))
+                File("${config.getDirectIndexDir()}/$docId").writeText(analyzer.analyze_whitespaceTokenizing(it).joinToString("\n"))
             }
         }
     }
@@ -28,7 +28,7 @@ class DirectIndexer(
         // generate new index
         documentService.findAllIds().forEach { docId ->
             documentService.findById(docId)?.let {
-                File("${config.getDirectIndexDir()}/$docId").writeText(analyzer.analyze(it).joinToString("\n"))
+                File("${config.getDirectIndexDir()}/$docId").writeText(analyzer.analyze_betterTokenizing(it).joinToString("\n"))
             }
         }
     }
