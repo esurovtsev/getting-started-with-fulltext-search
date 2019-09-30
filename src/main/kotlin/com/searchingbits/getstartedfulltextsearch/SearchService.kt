@@ -43,5 +43,10 @@ class SearchService(
                 .analyze(request)
                 .map { invertedIndexer.getPostingListByToken(it).toSet() }
                 .reduce { a, b -> a.intersect(b) }
-                .toList()
+
+    fun findUsingGreedyInvertedIndex(request: String): Collection<String> =
+            analyzer
+                .analyze(request)
+                .map { invertedIndexer.getPostingListByToken(it).toSet() }
+                .reduce { a, b -> a.plus(b) }
 }
