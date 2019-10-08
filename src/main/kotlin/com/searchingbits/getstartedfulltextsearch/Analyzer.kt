@@ -19,11 +19,21 @@ class TokenAnalyzer(
     fun analyze_betterTokenizing(input: String): Collection<String> =
             betterTokenizer
                 .tokenize(input)
+                .toSet()
                 .flatMap { lowerCaseFilter.filter(it) }
                 .flatMap { stopwordsFilter.filter(it) }
                 .flatMap { stemmingFilter.filter(it) }
                 .flatMap { synonymsFilter.filter(it) }
                 .toSortedSet()
+
+    fun analyze_betterTokenizingWithDuplicates(input: String): Collection<String> =
+            betterTokenizer
+                .tokenize(input)
+                .flatMap { lowerCaseFilter.filter(it) }
+                .flatMap { stopwordsFilter.filter(it) }
+                .flatMap { stemmingFilter.filter(it) }
+                .flatMap { synonymsFilter.filter(it) }
+                .sorted()
 }
 
 @Component
@@ -31,7 +41,7 @@ class WhitespaceTokenizer {
     private val whitespace = Regex("\\s+")
 
     fun tokenize(input: String): Collection<String> =
-            input.split(whitespace).toSet()
+            input.split(whitespace)
 }
 
 @Component

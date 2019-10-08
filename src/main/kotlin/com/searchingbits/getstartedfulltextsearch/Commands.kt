@@ -9,7 +9,7 @@ enum class SearchType {
 }
 
 enum class IndexType {
-    DIRECT, BETTER_DIRECT, INVERTED
+    DIRECT, BETTER_DIRECT, INVERTED, INVERTED_DUPLICATED
 }
 
 @ShellComponent
@@ -57,6 +57,7 @@ class Commands(
             IndexType.DIRECT -> directIndexer.createIndex()
             IndexType.BETTER_DIRECT -> directIndexer.createBetterIndex()
             IndexType.INVERTED -> invertedIndexer.createIndex()
+            IndexType.INVERTED_DUPLICATED -> invertedIndexer.createIndexWithDuplicates()
         }
         return "Index created: $type"
     }
