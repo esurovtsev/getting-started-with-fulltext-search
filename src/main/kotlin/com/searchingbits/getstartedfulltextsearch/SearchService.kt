@@ -49,4 +49,17 @@ class SearchService(
                 .analyze_betterTokenizing(request)
                 .map { invertedIndexer.getPostingListByToken(it).toSet() }
                 .reduce { a, b -> a.plus(b) }
+
+    fun findWithScoring(request: String): Collection<String> =
+            analyzer
+                .analyze_betterTokenizing(request)
+                .asSequence()
+                .map { invertedIndexer.getPostingListByToken(it) }
+                .reduce { a, b -> a.plus(b) }
+                .asSequence()
+                .groupBy { it }
+                .map { it.key to it.value.size }
+                .sortedByDescending { it.second }
+                .map { it.first }
+                .toList()
 }
