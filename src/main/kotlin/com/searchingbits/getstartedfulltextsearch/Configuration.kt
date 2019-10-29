@@ -5,10 +5,10 @@ import org.springframework.stereotype.Component
 import java.io.File
 import javax.annotation.PostConstruct
 
-const val DATA_DIR_KEY = "com.grabduck.searchengine.dataDir"
-const val DIRECT_INDEX_DIR_KEY = "com.grabduck.searchengine.directIndexDir"
-const val STOP_WORDS_FILE_KEY = "com.grabduck.searchengine.stopWords"
-const val INVERTED_INDEX_FILE_KEY = "com.grabduck.searchengine.invertedIndexFile"
+const val DATA_DIR_KEY = "com.searchingBits.getStartedFulltextSearch.dataDir"
+const val DIRECT_INDEX_DIR_KEY = "com.searching-bits.get-started-fulltext-search.directIndexDir"
+const val STOP_WORDS_FILE_KEY = "com.searching-bits.get-started-fulltext-search.stopWords"
+const val INVERTED_INDEX_FILE_KEY = "com.searching-bits.get-started-fulltext-search.invertedIndexFile"
 
 @Component
 class Configuration {
