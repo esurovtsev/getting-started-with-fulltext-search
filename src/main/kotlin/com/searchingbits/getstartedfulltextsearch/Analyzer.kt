@@ -14,7 +14,9 @@ class TokenAnalyzer(
         private val synonymsFilter: SynonymsFilter
 ) {
     fun analyze_whitespaceTokenizing(input: String): Collection<String> =
-            whitespaceTokenizer.tokenize(input)
+            whitespaceTokenizer
+                .tokenize(input)
+                .toSet()
 
     fun analyze_betterTokenizing(input: String): Collection<String> =
             betterTokenizer
