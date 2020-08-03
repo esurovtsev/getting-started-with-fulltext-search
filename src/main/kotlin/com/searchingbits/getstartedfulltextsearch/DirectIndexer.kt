@@ -34,7 +34,7 @@ class DirectIndexer(
     }
 
     fun findAllIds(): List<String> =
-            File(config.getDirectIndexDir()).listFiles().map { it.name }
+            File(config.getDirectIndexDir()).listFiles()?.map { it.name } ?: listOf()
 
     fun findById(documentId: String): List<String> =
             this
@@ -42,6 +42,6 @@ class DirectIndexer(
                 .findLast { it == documentId }
                 ?.let { File("${config.getDirectIndexDir()}/$it") }
                 ?.takeIf { it.exists() && it.isFile && it.canRead() }
-                ?.let { it.readLines() }
+                ?.readLines()
             ?: listOf()
 }
