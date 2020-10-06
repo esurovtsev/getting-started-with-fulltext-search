@@ -3,5 +3,3 @@ logging.level.root: warn
 com.searchingBits.getStartedFulltextSearch:
   dataDir: target/classes/stories
   directIndexDir: target/classes/direct-index
-  invertedIndexFile: target/classes/inverted-index.txt
-  stopWords: target/classes/stopwords.txt

@@ -5,20 +5,19 @@ import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
 
 enum class SearchType {
-    BRUTE_FORCE, BRUTE_FORCE_TOKEN, DIRECT_INDEX, BETTER_DIRECT_INDEX, INVERTED_INDEX, GREEDY_INVERTED_INDEX, SCORING
+    BRUTE_FORCE, BRUTE_FORCE_TOKEN, DIRECT_INDEX
 }
 
 enum class IndexType {
-    DIRECT, BETTER_DIRECT, INVERTED, INVERTED_DUPLICATED
+    DIRECT
 }
 
 @ShellComponent
 class Commands(
-        private val config: Configuration,
-        private val documentService: DocumentService,
-        private val searchService: SearchService,
-        private val directIndexer: DirectIndexer,
-        private val invertedIndexer: InvertedIndexer
+    private val config: Configuration,
+    private val documentService: DocumentService,
+    private val searchService: SearchService,
+    private val directIndexer: DirectIndexer
 ) {
     @ShellMethod("Show current configuration")
     fun config(): List<String> =
@@ -44,10 +43,6 @@ class Commands(
                 SearchType.BRUTE_FORCE -> addHeader(searchService.findUsingBruteForce_simple(query))
                 SearchType.BRUTE_FORCE_TOKEN -> addHeader(searchService.findUsingBruteForce_tokenize(query))
                 SearchType.DIRECT_INDEX -> addHeader(searchService.findUsingDirectIndex(query))
-                SearchType.BETTER_DIRECT_INDEX -> addHeader(searchService.findUsingBetterDirectIndex(query))
-                SearchType.INVERTED_INDEX -> addHeader(searchService.findUsingInvertedIndex(query))
-                SearchType.GREEDY_INVERTED_INDEX -> addHeader(searchService.findUsingGreedyInvertedIndex(query))
-                SearchType.SCORING -> addHeader(searchService.findWithScoring(query))
             }
 
     @ShellMethod("Generates a search Index")
@@ -56,9 +51,6 @@ class Commands(
     ): String {
         when (type) {
             IndexType.DIRECT -> directIndexer.createIndex()
-            IndexType.BETTER_DIRECT -> directIndexer.createBetterIndex()
-            IndexType.INVERTED -> invertedIndexer.createIndex()
-            IndexType.INVERTED_DUPLICATED -> invertedIndexer.createIndexWithDuplicates()
         }
         return "Index created: $type"
     }

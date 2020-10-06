@@ -21,18 +21,6 @@ class DirectIndexer(
         }
     }
 
-    fun createBetterIndex() {
-        // delete old index
-        File(config.getDirectIndexDir()).listFiles()?.forEach { it.delete() }
-
-        // generate new index
-        documentService.findAllIds().forEach { docId ->
-            documentService.findById(docId)?.let {
-                File("${config.getDirectIndexDir()}/$docId").writeText(analyzer.analyze_betterTokenizing(it).joinToString("\n"))
-            }
-        }
-    }
-
     fun findAllIds(): List<String> =
             File(config.getDirectIndexDir()).listFiles()?.map { it.name } ?: listOf()
 
