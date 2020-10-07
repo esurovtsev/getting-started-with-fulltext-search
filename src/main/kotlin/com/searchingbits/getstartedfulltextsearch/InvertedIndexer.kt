@@ -41,23 +41,6 @@ class InvertedIndexer(
         File(config.getInvertedIndexFile()).writeText(gson.toJson(index))
     }
 
-    fun createIndexWithDuplicates() {
-        // delete old index
-        File(config.getInvertedIndexFile()).delete()
-        index.clear()
-
-        // generate new index
-        documentService.findAllIds().forEach { docId ->
-            documentService.findById(docId)?.let { doc ->
-                analyzer
-                    .analyze_betterTokenizingWithDuplicates(doc)
-                    .map { it to docId }
-                    .forEach { index[it.first]?.add(it.second) ?: index.put(it.first, mutableListOf(it.second)) }
-            }
-        }
-        File(config.getInvertedIndexFile()).writeText(gson.toJson(index))
-    }
-
     fun getPostingListByToken(token: String): List<String> =
             index[token] ?: listOf()
 }

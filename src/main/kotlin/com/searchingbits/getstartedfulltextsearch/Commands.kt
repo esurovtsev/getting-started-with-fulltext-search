@@ -5,11 +5,11 @@ import org.springframework.shell.standard.ShellMethod
 import org.springframework.shell.standard.ShellOption
 
 enum class SearchType {
-    BRUTE_FORCE, BRUTE_FORCE_TOKEN, DIRECT_INDEX, BETTER_DIRECT_INDEX, INVERTED_INDEX, GREEDY_INVERTED_INDEX, SCORING
+    BRUTE_FORCE, BRUTE_FORCE_TOKEN, DIRECT_INDEX, BETTER_DIRECT_INDEX, INVERTED_INDEX
 }
 
 enum class IndexType {
-    DIRECT, BETTER_DIRECT, INVERTED, INVERTED_DUPLICATED
+    DIRECT, BETTER_DIRECT, INVERTED
 }
 
 @ShellComponent
@@ -46,8 +46,6 @@ class Commands(
                 SearchType.DIRECT_INDEX -> addHeader(searchService.findUsingDirectIndex(query))
                 SearchType.BETTER_DIRECT_INDEX -> addHeader(searchService.findUsingBetterDirectIndex(query))
                 SearchType.INVERTED_INDEX -> addHeader(searchService.findUsingInvertedIndex(query))
-                SearchType.GREEDY_INVERTED_INDEX -> addHeader(searchService.findUsingGreedyInvertedIndex(query))
-                SearchType.SCORING -> addHeader(searchService.findWithScoring(query))
             }
 
     @ShellMethod("Generates a search Index")
@@ -58,7 +56,6 @@ class Commands(
             IndexType.DIRECT -> directIndexer.createIndex()
             IndexType.BETTER_DIRECT -> directIndexer.createBetterIndex()
             IndexType.INVERTED -> invertedIndexer.createIndex()
-            IndexType.INVERTED_DUPLICATED -> invertedIndexer.createIndexWithDuplicates()
         }
         return "Index created: $type"
     }
