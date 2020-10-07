@@ -8,7 +8,6 @@ import javax.annotation.PostConstruct
 const val DATA_DIR_KEY = "com.searching-bits.get-started-fulltext-search.data-dir"
 const val DIRECT_INDEX_DIR_KEY = "com.searching-bits.get-started-fulltext-search.direct-index-dir"
 const val STOP_WORDS_FILE_KEY = "com.searching-bits.get-started-fulltext-search.stop-words"
-const val INVERTED_INDEX_FILE_KEY = "com.searching-bits.get-started-fulltext-search.inverted-index-file"
 
 @Component
 class Configuration {
@@ -20,9 +19,6 @@ class Configuration {
 
     @Value("\${$STOP_WORDS_FILE_KEY}")
     private lateinit var stopwordsFile: String
-
-    @Value("\${$INVERTED_INDEX_FILE_KEY}")
-    private lateinit var invertedIndexFile: String
 
     @PostConstruct
     fun init() {
@@ -37,10 +33,9 @@ class Configuration {
 
     fun getAllProperties(): Map<String, String> =
             mapOf(
-                    DATA_DIR_KEY to File(dataDir).absolutePath,
-                    DIRECT_INDEX_DIR_KEY to File(directIndexDir).absolutePath,
-                    STOP_WORDS_FILE_KEY to File(stopwordsFile).absolutePath,
-                    INVERTED_INDEX_FILE_KEY to File(invertedIndexFile).absolutePath
+                DATA_DIR_KEY to File(dataDir).absolutePath,
+                DIRECT_INDEX_DIR_KEY to File(directIndexDir).absolutePath,
+                STOP_WORDS_FILE_KEY to File(stopwordsFile).absolutePath
             )
 
     fun getDataDir(): String =
@@ -51,8 +46,4 @@ class Configuration {
 
     fun getStopWordsFile(): String =
             getAllProperties()[STOP_WORDS_FILE_KEY] ?: "stopwords.txt"
-
-    fun getInvertedIndexFile(): String =
-            getAllProperties()[INVERTED_INDEX_FILE_KEY] ?: "index.txt"
-
 }

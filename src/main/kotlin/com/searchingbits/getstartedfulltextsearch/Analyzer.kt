@@ -6,12 +6,11 @@ import javax.annotation.PostConstruct
 
 @Component
 class TokenAnalyzer(
-        private val whitespaceTokenizer: WhitespaceTokenizer,
-        private val betterTokenizer: BetterTokenizer,
-        private val lowerCaseFilter: LowerCaseFilter,
-        private val stopwordsFilter: StopwordsFilter,
-        private val stemmingFilter: StemmingFilter,
-        private val synonymsFilter: SynonymsFilter
+    private val whitespaceTokenizer: WhitespaceTokenizer,
+    private val betterTokenizer: BetterTokenizer,
+    private val lowerCaseFilter: LowerCaseFilter,
+    private val stopwordsFilter: StopwordsFilter,
+    private val stemmingFilter: StemmingFilter
 ) {
     fun analyze_whitespaceTokenizing(input: String): Collection<String> =
             whitespaceTokenizer
@@ -25,17 +24,7 @@ class TokenAnalyzer(
                 .flatMap { lowerCaseFilter.filter(it) }
                 .flatMap { stopwordsFilter.filter(it) }
                 .flatMap { stemmingFilter.filter(it) }
-                .flatMap { synonymsFilter.filter(it) }
                 .toSortedSet()
-
-    fun analyze_betterTokenizingWithDuplicates(input: String): Collection<String> =
-            betterTokenizer
-                .tokenize(input)
-                .flatMap { lowerCaseFilter.filter(it) }
-                .flatMap { stopwordsFilter.filter(it) }
-                .flatMap { stemmingFilter.filter(it) }
-                .flatMap { synonymsFilter.filter(it) }
-                .sorted()
 }
 
 @Component
@@ -105,14 +94,4 @@ class StemmingFilter : Filter {
                 .mapNotNull { it.stemming(input) }
                 .fold(input) { result, element -> if (result.length < element.length) result else element })
 
-}
-
-@Component
-class SynonymsFilter : Filter {
-    val synonyms = mapOf(
-            "mountain" to listOf("hill", "bluff", "cliff", "elevation", "peak", "pile", "ridge", "sierra", "volcano")
-    )
-
-    override fun filter(input: String): Collection<String> =
-            synonyms[input]?.plus(input) ?: listOf(input)
 }
